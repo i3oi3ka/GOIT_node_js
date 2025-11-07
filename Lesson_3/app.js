@@ -1,7 +1,9 @@
 import express from "express";
 import { router } from "./my-router.js";
+
 const app = express();
 
+app.set("json spaces", 8);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use("/my-router", router);
@@ -21,6 +23,7 @@ app.listen(3000, () => {
 
 app.get("/contact/:id", (req, res) => {
   res.send(`<h1>Contact</h1> Параметр: ${req.params.id}`);
+  // res.json(contact)
 });
 
 app.patch("/user/:userid", (req, res) => {
