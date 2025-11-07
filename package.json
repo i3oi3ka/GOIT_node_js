@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/i3oi3ka/GOIT_node_js#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0"
   }
 }

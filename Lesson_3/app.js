@@ -1,7 +1,9 @@
 import express from "express";
+import cors from "cors";
 import { router } from "./my-router.js";
 
 const app = express();
+app.use(cors());
 
 app.set("json spaces", 8);
 app.use(express.urlencoded({ extended: false }));
