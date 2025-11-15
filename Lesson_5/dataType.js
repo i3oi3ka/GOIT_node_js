@@ -44,3 +44,75 @@ DataTypes.DATEONLY; // DATE без часу
 
 // UUID
 DataTypes.UUID;
+
+const { DataTypes, Defferable } = require("sequelize");
+
+sequelize.define(
+  "Foo",
+  {
+    // Поле `flag` логічного типу за замовчуванням буде мати значення `true`
+    flag: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+
+    // Значенням за замовчуванням для поля `myDate` буде поточна дата та час
+    myDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+
+    // Налаштування `allowNull` зі значенням `false` забороняє запис у колонку нульових значень (NULL)
+    title: { type: DataTypes.STRING, allowNull: false },
+
+    // Створення двох об'єктів з однаковим набором значень, зазвичай, призводить до виникнення помилки.
+    // Значенням налаштування `unique` може бути рядок або булеве значення. У даному випадку формується складовий унікальний ключ
+    uniqueOne: { type: DataTypes.STRING, unique: "compositeIndex" },
+    uniqueTwo: { type: DataTypes.INTEGER, unique: "compositeIndex" },
+
+    // `unique` використовується для позначення полів, які повинні містити лише унікальні значення
+    someUnique: { type: DataTypes.STRING, unique: true },
+
+    // Первинні або основні ключі будуть детально розглянуті далі
+    identifier: { type: DataTypes.STRING, primaryKey: true },
+
+    // Налаштування `autoIncrement` може використовуватися для створення колонки з автоматично зростаючими цілими числами
+    incrementMe: { type: DataTypes.INTEGER, autoIncrement: true },
+
+    // Налаштування `field` дозволяє кастомізувати назву колонки
+    fieldWithUnderscores: {
+      type: DataTypes.STRING,
+      field: "field_with_underscores",
+    },
+
+    // Зовнішні ключі також будуть детально розглянуті далі
+    bar_id: {
+      type: DataTypes.INTEGER,
+
+      references: {
+        // посилання на іншу модель
+        model: Bar,
+
+        // назва колонки моделі-посилання з первинним ключем
+        key: "id",
+
+        // у випадку з `postres`, можна визначати затримку отримання зовнішніх ключів
+        deferrable: Deferrable.INITIALLY_IMMEDIATE,
+        /*
+        `Deferrable.INITIALLY_IMMEDIATE` — перевірка зовнішніх ключів виконується негайно
+        `Deferrable.INITIALLY_DEFERRED` — перевірка зовнішніх ключів відкладається до кінця транзакції
+        `Deferrable.NOT` — без затримки: це не дозволить динамічно змінювати правила в транзакції
+      */
+
+        // Коментарі можна додавати лише в `mysql`/`mariadb`/`postres` і `mssql`
+        commentMe: {
+          type: DataTypes.STRING,
+          comment: "Коментар",
+        },
+      },
+    },
+  },
+  {
+    // Аналог атрибута `someUnique`
+    indexes: [
+      {
+        unique: true,
+        fields: ["someUnique"],
+      },
+    ],
+  }
+);
