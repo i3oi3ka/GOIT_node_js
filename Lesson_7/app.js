@@ -79,3 +79,29 @@ router.post("/login", async (req, res, next) => {
     },
   });
 });
+
+router.get("/list", auth, (req, res, next) => {
+  const { username } = req.user;
+  res.json({
+    status: "success",
+    code: 200,
+    data: {
+      message: `Authorization was successful: ${username}`,
+    },
+  });
+});
+
+const auth = (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user) => {
+    if (!user || err) {
+      return res.status(401).json({
+        status: "error",
+        code: 401,
+        message: "Unauthorized",
+        data: "Unauthorized",
+      });
+    }
+    req.user = user;
+    next();
+  })(req, res, next);
+};
